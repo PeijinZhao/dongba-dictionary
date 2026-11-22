@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>音标说明 · 东巴文中英对照词典</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">音标说明 · IPA GUIDE</div>
+    <h1>怎么读懂这些<em>音标</em></h1>
+    <p class="sub"><a href="index.html" style="color:var(--slate);">← 返回词典</a></p>
+  </header>
+
+  <div class="section-label"><span class="num">01</span><h2>为什么音标看起来"乱码"</h2><span class="line"></span></div>
+  <p class="sub" style="max-width:760px;">
+    原始数据来源把音标记录成了一段没有完整渲染的 LaTeX 数学公式片段，
+    例如 <code class="mono">\$a^{33}\$</code>，本来应该显示成 <b>a³³</b>。
+    网页现在会自动做转换：去掉 <code class="mono">\$ ... \$</code> 包裹符号、
+    把 <code class="mono">^{33}</code> 这种调值数字转成上标、把 <code class="mono">^{h}</code> 转成送气符号 ʰ。
+    极少数条目（带 ⚠︎ 标记）用了 <code class="mono">\eta</code> <code class="mono">\xi</code>
+    <code class="mono">\mathcal{S}</code> <code class="mono">\angle</code> 这类数学符号宏，大概率是原始资料
+    用了特殊语音字体、被转码搞乱了，具体对应哪个国际音标符号无法仅凭文本100%确认，
+    所以网页里会保留方括号 + 原宏名（例如 <code class="mono">t[xi?]</code>）原样展示，并不会替你瞎猜，
+    如需精确核对建议查阅原始参考文献（如李霖灿《纳西族象形文字字典》）。
+  </p>
+
+  <div class="section-label"><span class="num">02</span><h2>调值数字是什么</h2><span class="line"></span></div>
+  <p class="sub" style="max-width:760px;">
+    数字写在音节右上角，表示这个音节的<b>声调（音高）</b>，采用语言学里常见的"五度标调法"：
+    数字越大代表音高越高。常见组合：
+  </p>
+  <table class="ipa-table">
+    <thead><tr><th>调值</th><th>大致音高走向</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">⁵⁵</td><td>高平调（从高到高，持平）</td></tr>
+      <tr><td class="mono">³³</td><td>中平调（从中到中，持平）</td></tr>
+      <tr><td class="mono">³¹</td><td>中降调（从中往低下降）</td></tr>
+      <tr><td class="mono">¹³ / ¹⁵</td><td>低升调（从低往上升）</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label"><span class="num">03</span><h2>常见符号对照</h2><span class="line"></span></div>
+  <p class="sub" style="max-width:760px;">下面只列出这套词典里实际出现过的符号，不是完整的国际音标表。</p>
+  <table class="ipa-table">
+    <thead><tr><th>符号</th><th>类别</th><th>说明</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">ʰ</td><td>送气标记</td><td>写在辅音右上角，表示送气，如 kʰ、tsʰ</td></tr>
+      <tr><td class="mono">ɯ</td><td>元音</td><td>不圆唇后高元音，类似汉语拼音 "e" 在某些方言里的发音</td></tr>
+      <tr><td class="mono">ɑ</td><td>元音</td><td>后低元音，比普通话 "a" 更靠后</td></tr>
+      <tr><td class="mono">ə / ǝ</td><td>元音</td><td>中央元音（schwa），类似轻读的"鹅"音</td></tr>
+      <tr><td class="mono">ɛ</td><td>元音</td><td>前中低元音，类似英语 bed 里的 e</td></tr>
+      <tr><td class="mono">ȵ</td><td>辅音</td><td>硬腭鼻音，类似汉语拼音 "ni" 里的 n 音色</td></tr>
+      <tr><td class="mono">ŋ</td><td>辅音</td><td>软腭鼻音，类似英语 sing 结尾的 ng</td></tr>
+      <tr><td class="mono">ɡ</td><td>辅音</td><td>软腭浊塞音，类似英语 "go" 的 g</td></tr>
+      <tr><td class="mono">ɣ</td><td>辅音</td><td>软腭浊擦音，比 g 更"擦"一些</td></tr>
+      <tr><td class="mono">ʂ / ʐ</td><td>辅音</td><td>卷舌擦音，类似汉语拼音 sh / r 的音色</td></tr>
+      <tr><td class="mono">ʦ / ʣ</td><td>辅音</td><td>齿龈塞擦音（清/浊），类似汉语拼音 z / c</td></tr>
+      <tr><td class="mono">ʨ / ʥ</td><td>辅音</td><td>齿龈-硬腭塞擦音，类似汉语拼音 j / q 的音色</td></tr>
+      <tr><td class="mono">ɿ / ʅ</td><td>元音</td><td>舌尖元音，类似汉语拼音 zi / shi 里那个不太响的元音</td></tr>
+      <tr><td class="mono">ç</td><td>辅音</td><td>硬腭清擦音，类似德语 ich 里的 ch</td></tr>
+    </tbody>
+  </table>
+
+  <div class="section-label"><span class="num">04</span><h2>待核实的符号</h2><span class="line"></span></div>
+  <p class="sub" style="max-width:760px;">
+    以下宏名出现在少数条目里，页面会显示成 <code class="mono">[宏名?]</code> 并加 ⚠︎，
+    暂不替它们认定具体音标，避免误导：
+  </p>
+  <table class="ipa-table">
+    <thead><tr><th>原始宏</th><th>可能对应</th><th>确定程度</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">\eta</td><td>ŋ（软腭鼻音，常见于辅音后的鼻音尾）</td><td>较可能，未确认</td></tr>
+      <tr><td class="mono">\xi</td><td>ɕ（硬腭-齿龈清擦音）</td><td>较可能，未确认</td></tr>
+      <tr><td class="mono">\mathcal{S}</td><td>ʃ（后龈清擦音，类似英语 sh）</td><td>较可能，未确认</td></tr>
+      <tr><td class="mono">\angle</td><td>不确定</td><td>未能判断</td></tr>
+    </tbody>
+  </table>
+
+</div>
+</body>
+</html>

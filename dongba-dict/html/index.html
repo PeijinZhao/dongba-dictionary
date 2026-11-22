@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>东巴文中英对照词典</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="eyebrow">东巴文字符索引 · DONGBA GLYPH INDEX</div>
+    <h1>东巴文 <em>·</em> 中英对照词典</h1>
+    <p class="sub">搜索中文、英文、纳西语转写或分类，查看对应的东巴文符号与国际音标。点击任意卡片可查看完整释义。</p>
+    <div class="badge-row">
+      <span class="badge" id="totalBadge">— 条目</span>
+      <span class="badge">字形 · 中文 · 英文 · IPA</span>
+      <a class="badge link" href="ipa-guide.html">音标说明 →</a>
+      <button class="badge link" id="settingsToggle" type="button">AI 设置 ⚙</button>
+    </div>
+    <div class="settings-panel hidden" id="settingsPanel">
+      <p class="settings-hint">
+        填入你自己的 Claude API Key，即可使用下方"AI 组合建议"功能（仅在你本机浏览器中使用，
+        不会上传到任何服务器；Key 会以明文形式留存在本地浏览器存储里，请勿在公共/共享电脑上使用）。
+      </p>
+      <div class="settings-row">
+        <input id="apiKeyInput" type="password" placeholder="sk-ant-..." />
+        <button id="apiKeySave" type="button">保存</button>
+        <button id="apiKeyClear" type="button" class="ghost">清除</button>
+      </div>
+      <p class="settings-status" id="apiKeyStatus">未设置</p>
+    </div>
+  </header>
+
+  <div class="search-bar">
+    <input id="searchInput" type="text" placeholder="例如：鸡 / chicken / sun / 太阳" />
+    <button id="searchButton">搜索</button>
+  </div>
+  <div class="count-line" id="stats"></div>
+
+  <div class="grid" id="results"></div>
+
+  <!-- ---------- Phrase composition ---------- -->
+  <div class="section-label">
+    <span class="num">02</span><h2>词语组合预览</h2><span class="line"></span>
+  </div>
+  <p class="sub" style="margin-bottom:18px;">
+    东巴文是象形文字系统，1188 个字主要对应具体的人、动物、自然物与日常器物，
+    并非为现代词汇设计。输入一个词或短语，下面会尝试把它拆成单字，在词典里逐个查找——
+    查不到的字会诚实地标"未收录"，不会编造结果。
+  </p>
+  <div class="search-bar">
+    <input id="phraseInput" type="text" placeholder="例如：好学 / 吉祥如意 / 好好学习" />
+    <button id="phraseButton">拆解</button>
+    <button id="aiSuggestButton" class="ghost">AI 组合建议</button>
+  </div>
+  <div id="phraseResult"></div>
+
+</div>
+
+<!-- ---------- Detail modal ---------- -->
+<div class="modal-overlay hidden" id="modalOverlay">
+  <div class="modal-card" id="modalCard"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

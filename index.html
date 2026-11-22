@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown 表格与 SVG 查看器</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        td img.svg-preview {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+        .error-message {
+            color: red;
+            font-style: italic;
+            font-size: 0.8em;
+        }
+        #tableContainer {
+            overflow-x: auto;
+        }
+        #mdFileSelector {
+            margin-bottom: 15px;
+        }
+        select {
+            padding: 8px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Markdown 表格与 SVG 查看器</h1>
+    
+    <div id="tableContainer">
+        <p>加载 Markdown 表格中...</p>
+    </div>
+
+    <script>
+        const tableContainer = document.getElementById('tableContainer');
+        const svgFolderPath = 'svgs/'; // SVG文件所在的子文件夹名
+        const mdFileName = 'table.md'; // 默认的MD文件名
+        
+        // 页面加载时自动加载MD文件
+        document.addEventListener('DOMContentLoaded', function() {
+            // 直接加载默认的table.md文件
+            loadMdFile(mdFileName);
+        });
+        
+        // 加载MD文件内容
+        async function loadMdFile(filename) {
+            try {
+                tableContainer.innerHTML = '<p>正在加载文件内容...</p>';
+                
+                const response = await fetch(filename);
+                if (!response.ok) {
+                    throw new Error(`HTTP 错误! 状态: ${response.status}`);
+                }
+                
+                const mdContent = await response.text();
+                const tableHtml = parseMarkdownTableAndGenerateHtml(mdContent);
+                
+                if (tableHtml) {
+                    tableContainer.innerHTML = tableHtml;
+                } else {
+                    tableContainer.innerHTML = '<p class="error-message">在文件中未找到有效的 Markdown 表格。</p>';
+                }
+            } catch (error) {
+                console.error("加载文件时出错:", error);
+                tableContainer.innerHTML = `<p class="error-message">加载文件时出错: ${error.message}</p>`;
+            }
+        }
+
+        function parseMarkdownTableAndGenerateHtml(mdContent) {
+            const lines = mdContent.split(/\r?\n/); // Split into lines, handling different line endings
+            let header = null;
+            let separator = null;
+            const rows = [];
+            let inTable = false;
+
+            for (const line of lines) {
+                const trimmedLine = line.trim();
+
+                if (!trimmedLine) { // Skip empty lines
+                    if (inTable) break; // Stop if we hit an empty line after table starts
+                    continue;
+                }
+
+                // Check for separator line |---|---|...
+                if (trimmedLine.includes('|') && trimmedLine.match(/^\|?[-:|\s]+\|?$/)) {
+                     // Make sure it's preceded by a potential header line
+                    if (header && !separator) {
+                        separator = trimmedLine;
+                        inTable = true;
+                        continue; // Move to next line (data rows start after separator)
+                    }
+                }
+
+                // Check for potential header or data row | content | content | ...
+                if (trimmedLine.startsWith('|') || trimmedLine.endsWith('|')) {
+                     const cells = trimmedLine.split('|').map(cell => cell.trim());
+                     // Basic validation: Needs at least 2 pipes for one column
+                     if (cells.length > 2) {
+                         if (!separator) {
+                            // Assume this is the header row (found before separator)
+                            header = cells.slice(1, -1); // Remove empty strings from start/end split
+                         } else if (inTable) {
+                             // This is a data row (found after separator)
+                            rows.push(cells.slice(1, -1)); // Store data row cells
+                         }
+                     }
+                } else {
+                    // If we encounter a non-table line after finding the separator, stop table parsing
+                    if (inTable) {
+                         break;
+                    }
+                }
+            }
+
+            // If no valid table structure found
+            if (!header || !separator || rows.length === 0) {
+                return null;
+            }
+
+            // --- Generate HTML Table ---
+            let html = '<table>';
+
+            // Header Row
+            html += '<thead><tr>';
+            header.forEach(h => html += `<th>${escapeHtml(h)}</th>`);
+            html += '<th>SVG 图像</th>'; // Add 8th column header
+            html += '</tr></thead>';
+
+            // Data Rows
+            html += '<tbody>';
+            rows.forEach(row => {
+                html += '<tr>';
+                
+                // Add existing columns (1 to 7)
+                row.forEach(cell => html += `<td>${escapeHtml(cell)}</td>`);
+
+                // Handle potential missing columns up to 7
+                for (let i = row.length; i < 7; i++) {
+                     html += '<td></td>'; // Add empty cells if original row was short
+                }
+
+                // 8th Column (SVG Image)
+                html += '<td>';
+                if (row.length >= 7 && row[6]) { // Check if 7th column exists and is not empty
+                    const svgFilename = row[6].trim();
+                    if (svgFilename.toLowerCase().endsWith('.svg')) {
+                        const svgPath = svgFolderPath + svgFilename;
+                        // Use onerror to handle cases where the SVG doesn't load
+                        console.log(`准备为 ${svgFilename} 添加 img 标签, 路径: ${svgPath}`);
+                        html += `<img src="${escapeHtml(svgPath)}"
+                                      alt="${escapeHtml(svgFilename)}"
+                                      class="svg-preview"
+                                      onerror="this.outerHTML='<span class=\\'error-message\\'>无法加载 ${escapeHtml(svgFilename)}</span>'">`;
+                    } else {
+                        html += `<span class="error-message">非SVG文件: ${escapeHtml(svgFilename)}</span>`;
+                    }
+                } else {
+                    html += ''; // Empty cell if 7th column is missing or empty
+                }
+                html += '</td>';
+                html += '</tr>';
+            });
+            html += '</tbody>';
+
+            html += '</table>';
+            return html;
+        }
+
+         // Helper function to prevent basic HTML injection from cell content
+        function escapeHtml(unsafe) {
+            if (unsafe === null || unsafe === undefined) return '';
+            return unsafe
+                 .toString()
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+    </script>
+
+</body>
+</html>
