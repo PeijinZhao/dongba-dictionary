@@ -45,7 +45,17 @@ python3 -m http.server 8000
 
 ## Data source
 
-Glyph images and dictionary entries are based on: **[SOURCE — fill in the dataset/font/book the glyphs and entries came from, with a link and its license]**.
+The dictionary entries (romanized names, IPA, English and Chinese meanings, and references) come from the Unicode proposal for the Naxi Dongba script:
+
+- ISO/IEC JTC1/SC2/WG2 **N4898** (L2/17-339), *Revised chart of Naxi Dongba characters*, China National Body, 2017-09-22. https://www.unicode.org/L2/L2017/17339-n4898-naxi-dongba-rev.pdf
+
+That repertoire of 1,188 single-glyph characters was compiled from three standard dictionaries:
+
+- Fang Guoyu 方国瑜, *Naxi Xiangxing Wenzi Pu* 纳西象形文字谱 (1981) — `F:` in the category field
+- Li Lincan 李霖灿, *Moxie Xiangxing Wenzi Zidian* 么些象形文字字典 (1953) — `L:` in the category field
+- Joseph F. Rock, *A Na-khi–English Encyclopedic Dictionary* (1963)
+
+The glyphs are mapped to Private Use Area code points (U+E000–U+E4A3) in the proposal's order. This is an educational, non-commercial project.
 
 ## Author
 
